@@ -1,43 +1,51 @@
-import sprocketlib as spl
-import getpass
-import os
 import json
+import os
+
+import sprocketlib as spl
+
+FACTIONS_DIR = os.path.join("OneDrive", "Documents", "My Games", "Sprocket", "Factions")
+
 
 def load_bp(filepath: str):
     """
     Convert .blueprint file into sprocketlib.base.BluePrint object
     """
     bp = spl.base.BluePrint(filepath)
-    
     return bp
 
 def load_bp_as_dict(filepath: str) -> dict:
     """
     Convert .blueprint to python dictionary
     """
-    return json.load(open(filepath, 'r'))
+    with open(filepath, 'r') as src:
+        return json.load(src)
 
 def get_factions_folder() -> str:
     """
     Return path to folder containing factions
     """
-    return f"C:/Users/{getpass.getuser()}/OneDrive/Documents/My Games/Sprocket/Factions"
+    user_dir = os.environ["USERPROFILE"]
+    return os.path.join(user_dir, FACTIONS_DIR)
 
-def get_factions(factionsFolder: str) -> list:
+def get_factions(factions_folder: str) -> list[str]:
     """
     Return list of factions
     """
-    return [name for name in os.listdir(factionsFolder) if os.path.isdir(os.path.join(factionsFolder, name))]
+    return [entry.name for entry in os.scandir(factions_folder) if entry.is_dir()]
 
-def get_vehicles_folder(factionsFolder, faction) -> str:
+def get_vehicles_folder(factions_folder, faction) -> str:
     """
     Return path to folder containing vehicles of a given faction
     """
-    return factionsFolder + f'/{faction}/Blueprints/Vehicles'
+    return os.path.join(factions_folder, faction, 'Blueprints', 'Vehicles')
 
-def get_vehicles(vehiclesFolder: str) -> list:
+def get_vehicles(vehicles_folder: str) -> list[str]:
     """
     Return list of vehicles in a faction
     """
-    return [name[:-10] for name in os.listdir(vehiclesFolder) if os.path.isfile(os.path.join(vehiclesFolder, name)) and os.path.splitext(os.path.join(vehiclesFolder, name))[1] == '.blueprint']
-
+    vehicles = [
+        os.path.splitext(entry.name)[0]
+        for entry in os.scandir(vehicles_folder)
+        if entry.is_file() and os.path.splitext(entry.name)[1] == '.blueprint'
+    ]
+    return vehicles
