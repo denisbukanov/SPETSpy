@@ -11,7 +11,7 @@ def create_scene(filepath: str) -> pwf.Wavefront:
         create_materials=True,
         collect_faces=True,
     )
-
+    scene.parse()
     return scene
 
 def load_shape_from_obj(data, raw = True):
@@ -49,7 +49,7 @@ def load_shape_from_obj(data, raw = True):
 
     return shape_data
 
-def populate_vertices(scene: pwf.Wavefront) -> list:
+def populate_vertices(scene: pwf.Wavefront) -> list[spl.mesh.Vertex]:
     """
     Create a list of sprocketlib.mesh.Vertex objects
     """

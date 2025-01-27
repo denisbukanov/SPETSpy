@@ -24,7 +24,7 @@ def get_factions_folder() -> str:
     """
     Return path to folder containing factions
     """
-    user_dir = os.environ["USERPROFILE"]
+    user_dir = os.environ.get("USERPROFILE", "")
     return os.path.join(user_dir, FACTIONS_DIR)
 
 def get_factions(factions_folder: str) -> list[str]:
@@ -49,3 +49,9 @@ def get_vehicles(vehicles_folder: str) -> list[str]:
         if entry.is_file() and os.path.splitext(entry.name)[1] == '.blueprint'
     ]
     return vehicles
+
+def get_vehicle_path(vehicles_folder: str, vehicle_name: str) -> str:
+    """
+    Return path to the vehicle blueprint with a given name
+    """
+    return os.path.join(vehicles_folder, f'{vehicle_name}.blueprint')

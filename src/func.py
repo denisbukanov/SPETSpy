@@ -34,14 +34,16 @@ def importer(obj: str, compartment: str, asVehicle: str = "", thickness = 1) -> 
         }
 
         found = False
+
         for mesh in vData['meshes']:
+            print(f'{mesh["vuid"]=}')
             if mesh['vuid'] == vuid:
                 mesh['meshData']['mesh'] = cData['meshes'][0]['meshData']['mesh']
                 found = True
                 
         if not found:
             err = 3
-            return (f"Compartment {compartment} not found. Aborting with error code {err}.", err)
+            return (f"Compartment <{compartment}> not found. Aborting with error code {err}.", err)
 
         return ("vData", 0)
 
